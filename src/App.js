@@ -5,9 +5,15 @@ const App = () => {
   const [moveableComponents, setMoveableComponents] = useState([]);
   const [selected, setSelected] = useState(null);
 
+  const removeMoveable = () => {
+    moveableComponents.pop();
+  }
+
   const addMoveable = () => {
     // Create a new moveable component and add it to the array
     const COLORS = ["red", "blue", "yellow", "green", "purple"];
+
+    
 
     setMoveableComponents([
       ...moveableComponents,
@@ -24,8 +30,13 @@ const App = () => {
   };
 
   const updateMoveable = (id, newComponent, updateEnd = false) => {
+
     const updatedMoveables = moveableComponents.map((moveable, i) => {
       if (moveable.id === id) {
+
+        newComponent.top = newComponent.top > 0 ? newComponent.top : 0; 
+        newComponent.left = newComponent.left > 0 ? newComponent.left : 0;
+
         return { id, ...newComponent, updateEnd };
       }
       return moveable;
@@ -56,7 +67,11 @@ const App = () => {
 
   return (
     <main style={{ height : "100vh", width: "100vw" }}>
-      <button onClick={addMoveable}>Add Moveable1</button>
+      <div id="button-cointainer" style={{display: "flex", gap: "10px"}}>
+        <button onClick={addMoveable}>Add Moveable1</button>
+        <button onClick={removeMoveable}>Remove Last Moveable</button>
+        </div>
+      
       <div
         id="parent"
         style={{
@@ -64,6 +79,7 @@ const App = () => {
           background: "black",
           height: "80vh",
           width: "80vw",
+          overflow:"hidden",
         }}
       >
         {moveableComponents.map((item, index) => (
@@ -121,6 +137,7 @@ const Component = ({
 
     if (positionMaxTop > parentBounds?.height)
       newHeight = parentBounds?.height - top;
+
     if (positionMaxLeft > parentBounds?.width)
       newWidth = parentBounds?.width - left;
 
@@ -142,6 +159,7 @@ const Component = ({
     let translateY = beforeTranslate[1];
 
     ref.current.style.transform = `translate(${translateX}px, ${translateY}px)`;
+    
 
     setNodoReferencia({
       ...nodoReferencia,
